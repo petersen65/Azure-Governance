@@ -1,6 +1,6 @@
 [
     {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/4468eb19-1130-4dc7-b6cc-246575d0bfa1",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
         "parameters": {
             "listOfAllowedLocations": {
                 "value": "[parameters('AllowedLocations')]"
