@@ -1,0 +1,53 @@
+{
+ "properties": {
+  "displayName": "Enforce Image Publishers",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "Enforce whitelist for virtual machine image publishers",
+  "metadata": {
+   "category": "General",
+   "createdBy": "f00c5d96-8aca-49b0-991c-891500ead0af",
+   "createdOn": "2020-02-06T19:25:06.1426437Z",
+   "updatedBy": null,
+   "updatedOn": null
+  },
+  "parameters": {
+   "WhiteList": {
+    "type": "Array",
+    "metadata": {
+     "displayName": "Image Publishers",
+     "description": "Whitelist for virtual machine image publishers"
+    }
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "in": [
+       "Microsoft.Compute/virtualMachines",
+       "Microsoft.Compute/VirtualMachineScaleSets"
+      ]
+     },
+     {
+      "not": {
+       "field": "Microsoft.Compute/imagePublisher",
+       "in": "[parameters('WhiteList')]"
+      }
+     },
+     {
+      "field": "Microsoft.Compute/imagePublisher",
+      "exists": "true"
+     }
+    ]
+   },
+   "then": {
+    "effect": "deny"
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/19bb061f-570f-4487-bdc6-86990c8773d7/providers/Microsoft.Authorization/policyDefinitions/f63293a4-3a70-4c66-9e64-586befd34d01",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "f63293a4-3a70-4c66-9e64-586befd34d01"
+}

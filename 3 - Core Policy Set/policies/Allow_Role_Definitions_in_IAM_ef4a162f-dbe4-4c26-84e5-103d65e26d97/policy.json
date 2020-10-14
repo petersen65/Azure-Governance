@@ -1,0 +1,88 @@
+{
+ "properties": {
+  "displayName": "Allow Role Definitions in IAM",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "Define a white list of role definitions that can be used in identity access management",
+  "metadata": {
+   "category": "General",
+   "createdBy": "f00c5d96-8aca-49b0-991c-891500ead0af",
+   "createdOn": "2020-02-06T19:21:01.5547224Z",
+   "updatedBy": null,
+   "updatedOn": null
+  },
+  "parameters": {
+   "RoleDefinition1": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Role Definition Id 1",
+     "description": "Guid part of role definition 1"
+    }
+   },
+   "RoleDefinition2": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Role Definition Id 2",
+     "description": "Guid part of role definition 2"
+    }
+   },
+   "RoleDefinition3": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Role Definition Id 3",
+     "description": "Guid part of role definition 3"
+    }
+   },
+   "RoleDefinition4": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Role Definition Id 4",
+     "description": "Guid part of role definition 4"
+    }
+   },
+   "RoleDefinition5": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Role Definition Id 5",
+     "description": "Guid part of role definition 5"
+    }
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Authorization/roleAssignments"
+     },
+     {
+      "field": "Microsoft.Authorization/roleAssignments/roleDefinitionId",
+      "notContains": "[parameters('RoleDefinition1')]"
+     },
+     {
+      "field": "Microsoft.Authorization/roleAssignments/roleDefinitionId",
+      "notContains": "[parameters('RoleDefinition2')]"
+     },
+     {
+      "field": "Microsoft.Authorization/roleAssignments/roleDefinitionId",
+      "notContains": "[parameters('RoleDefinition3')]"
+     },
+     {
+      "field": "Microsoft.Authorization/roleAssignments/roleDefinitionId",
+      "notContains": "[parameters('RoleDefinition4')]"
+     },
+     {
+      "field": "Microsoft.Authorization/roleAssignments/roleDefinitionId",
+      "notContains": "[parameters('RoleDefinition5')]"
+     }
+    ]
+   },
+   "then": {
+    "effect": "deny"
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/19bb061f-570f-4487-bdc6-86990c8773d7/providers/Microsoft.Authorization/policyDefinitions/ef4a162f-dbe4-4c26-84e5-103d65e26d97",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "ef4a162f-dbe4-4c26-84e5-103d65e26d97"
+}
