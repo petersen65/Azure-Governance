@@ -1,0 +1,111 @@
+{
+ "properties": {
+  "displayName": "Enforce DenyAllVnetInBound on NSG",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "Create default security rule DenyAllVnetInBound for all network security groups",
+  "metadata": {
+   "category": "General",
+   "createdBy": "f00c5d96-8aca-49b0-991c-891500ead0af",
+   "createdOn": "2020-10-14T16:15:50.2047052Z",
+   "updatedBy": null,
+   "updatedOn": null
+  },
+  "parameters": {},
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Network/networkSecurityGroups"
+     }
+    ]
+   },
+   "then": {
+    "effect": "deployIfNotExists",
+    "details": {
+     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+     "name": "DenyAllVnetInBound",
+     "existenceCondition": {
+      "allOf": [
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/protocol",
+        "equals": "*"
+       },
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourcePortRange",
+        "equals": "*"
+       },
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+        "equals": "VirtualNetwork"
+       },
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
+        "equals": "*"
+       },
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationAddressPrefix",
+        "equals": "VirtualNetwork"
+       },
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/access",
+        "equals": "Deny"
+       },
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/priority",
+        "equals": "4096"
+       },
+       {
+        "field": "Microsoft.Network/networkSecurityGroups/securityRules/direction",
+        "equals": "Inbound"
+       }
+      ]
+     },
+     "roleDefinitionIds": [
+      "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+     ],
+     "deployment": {
+      "properties": {
+       "mode": "incremental",
+       "parameters": {
+        "resourceName": {
+         "value": "[field('fullName')]"
+        }
+       },
+       "template": {
+        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {
+         "resourceName": {
+          "type": "string"
+         }
+        },
+        "resources": [
+         {
+          "apiVersion": "2018-08-01",
+          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+          "name": "[concat(parameters('resourceName'), '/DenyAllVnetInBound')]",
+          "properties": {
+           "protocol": "*",
+           "sourcePortRange": "*",
+           "sourceAddressPrefix": "VirtualNetwork",
+           "destinationPortRange": "*",
+           "destinationAddressPrefix": "VirtualNetwork",
+           "access": "Deny",
+           "priority": "4096",
+           "direction": "Inbound"
+          }
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/19bb061f-570f-4487-bdc6-86990c8773d7/providers/Microsoft.Authorization/policyDefinitions/1f0ab688-0788-4f4a-989c-f8dd24e433f0",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "1f0ab688-0788-4f4a-989c-f8dd24e433f0"
+}
