@@ -1,0 +1,29 @@
+{
+  "properties": {
+    "targetScope": "subscription",
+    "parameters": {
+      "diagnosticsSettings_settingName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "settingsName (Diagnostics Settings)"
+        },
+        "allowedValues": []
+      },
+      "diagnosticsSettings_storageAccountId": {
+        "type": "string",
+        "metadata": {
+          "displayName": "storageAccountId (Diagnostics Settings)"
+        },
+        "allowedValues": []
+      },
+      "diagnosticsSettings_workspaceId": {
+        "type": "string",
+        "metadata": {
+          "displayName": "workspaceId (Diagnostics Settings)"
+        },
+        "allowedValues": []
+      }
+    },
+    "resourceGroups": {}
+  }
+}

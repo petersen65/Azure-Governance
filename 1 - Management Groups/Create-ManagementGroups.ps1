@@ -4,7 +4,11 @@ Connect-AzAccount
 # Global Variables
 $tenantId = (Get-AzContext).Tenant.Id
 $parentId = "/providers/Microsoft.Management/managementGroups/$tenantId"
+$location = 'westeurope'
 $domain = Read-Host -Prompt 'Enter Azure AD Domain Name: '
+
+# Install support for Azure Managed Identities
+Install-Module -Name 'Az.ManagedServiceIdentity' -Scope AllUsers
 
 # Create first level of Management Groups
 New-AzManagementGroup -GroupName 'custodian-services' -DisplayName 'Custodian Services' -ParentId $parentId
@@ -31,7 +35,9 @@ Remove-AzRoleAssignment -ObjectId $ownerId -Scope "/providers/Microsoft.Manageme
 # Create custodian team identities
 New-AzADGroup -DisplayName 'Custodian Team' -MailNickName 'CT'
 New-AzADUser -DisplayName 'CT User' -UserPrincipalName "ctuser@$domain" -Password (ConvertTo-SecureString 'Passw0rd!#' -AsPlainText -Force) -MailNickname 'CTU'
+New-AzUserAssignedIdentity -ResourceGroupName 'Security' -Name 'blueprints-global-owner' -Location $location
 Add-AzADGroupMember -MemberObjectId (Get-AzADUser -SearchString 'CT User').Id -TargetGroupObjectId (Get-AzADGroup -SearchString 'Custodian Team').Id
+Add-AzADGroupMember -MemberObjectId (Get-AzADServicePrincipal -DisplayName 'blueprints-global-owner').Id -TargetGroupObjectId (Get-AzADGroup -SearchString 'Custodian Team').Id
 
 # Create team identities for division 1 projects
 New-AzADGroup -DisplayName 'Division 1 Team' -MailNickName 'D1T'
