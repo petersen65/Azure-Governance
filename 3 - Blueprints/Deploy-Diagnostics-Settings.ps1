@@ -19,6 +19,7 @@ Publish-AzBlueprint -Blueprint $bpDefinition -Version '1.0' -ChangeNote 'Diagnos
 
 $storageAccountId = (Get-AzResource -Name 'petersen' -ResourceGroupName 'Storage').ResourceId
 $workspaceIdId = (Get-AzResource -Name 'petersen' -ResourceGroupName 'Monitoring').ResourceId
+$userAssignedIdentity = (Get-AzResource -Name 'blueprints-global-owner' -ResourceGroupName 'Security').ResourceId
 
 $params = @{ `
         'diagnosticsSettings_settingName'      = 'Activity Logs Diagnostics'; `
@@ -30,7 +31,7 @@ New-AzBlueprintAssignment -Name "assignment-$($bpDefinition.Name)" `
     -Blueprint $bpDefinition `
     -SubscriptionId $subscriptionId `
     -Location $location `
-    -UserAssignedIdentity 'blueprints-global-owner' `
+    -UserAssignedIdentity $userAssignedIdentity `
     -Lock 'AllResourcesReadOnly' `
     -Parameter $params
 
