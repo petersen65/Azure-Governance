@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "keyVaultUri": {
+      "value": "https://mikepet4711kv.vault.azure.net"
+    },
+    "keyName": {
+      "value": "storage-account"
+    },
+    "keyVersion": {
+      "value": "ba0435fe62114a2caf83c4d731610cfc"
+    },
+    "storagePublicDnsName": {
+      "value": "mikepet4711sa"
+    }
+  }
+}

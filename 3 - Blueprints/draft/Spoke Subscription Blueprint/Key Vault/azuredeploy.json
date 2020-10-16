@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "keyVaultPublicDnsName": {
+      "type": "string",
+      "metadata": {
+        "description": "Public resolvable DNS name for the Key Vault"
+      }
+    },
+    "vaultSku": {
+      "type": "string",
+      "allowedValues": [
+        "Standard",
+        "Premium"
+      ],
+      "metadata": {
+        "description": "Specifies the SKU for the Key Vault"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location in which the resources will be deployed"
+      }
+    }
+  },
+  "variables": {
+    "namingPrefix": "",
+    "namingSuffix": "",
+    "keyVaultName": "[concat(variables('namingPrefix'), parameters('keyVaultPublicDnsName'), variables('namingSuffix'))]",
+    "vaultDeployment": true,
+    "vaultTemplateDeployment": true,
+    "vaultDiskEncryption": true
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-02-14",
+      "name": "[variables('keyVaultName')]",
+      "type": "Microsoft.KeyVault/vaults",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "Infrastructure Key Vault"
+      },
+      "properties": {
+        "enabledForDeployment": "[variables('vaultDeployment')]",
+        "enabledForTemplateDeployment": "[variables('vaultTemplateDeployment')]",
+        "enabledForDiskEncryption": "[variables('vaultDiskEncryption')]",
+        "enableSoftDelete": true,
+        "enablePurgeProtection": true,
+        "tenantId": "[subscription().tenantId]",
+        "accessPolicies": [],
+        "sku": {
+          "name": "[parameters('vaultSku')]",
+          "family": "A"
+        },
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "azureSubscription": {
+      "type": "object",
+      "value": "[subscription()]"
+    },
+    "keyVault": {
+      "type": "object",
+      "value": "[reference(variables('keyVaultName'))]"
+    }
+  }
+}

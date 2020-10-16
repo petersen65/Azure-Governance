@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "autoProvisioning": {
+      "value": "On"
+    },
+    "workspaceName": {
+      "value": "LogWS-Default"
+    },
+    "workspaceResourceGroup": {
+      "value": "DBSStandardSubscriptionBlueprint"
+    },
+    "emailSecurityContact": {
+      "value": "mikepet@microsoft.com"
+    },
+    "phoneSecurityContact": {
+      "value": "+491755844979"
+    },
+    "alertNotifications": {
+      "value": "On"
+    },
+    "alertsToAdmin": {
+      "value": "On"
+    },
+    "securitySettings": {
+      "value": "On"
+    },
+    "workspaceSubscriptionId": {
+      "value": "[subscription().subscriptionId]"
+    }
+  }
+}

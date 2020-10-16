@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "spokeVnetResourceId": {
+      "value": "/subscriptions/858d67bf-023e-4655-b82a-8bae7c3060ee/resourceGroups/SpokeSubscriptionBlueprint/providers/Microsoft.Network/virtualNetworks/mikepet4711vnet"
+    },
+    "virtualNetworkName": {
+      "value": "westeurope-hub"
+    }
+  }
+}

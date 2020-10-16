@@ -1,0 +1,74 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "recoveryServicePublicDnsName": {
+      "type": "string",
+      "metadata": {
+        "description": "Public resolvable DNS name for the Recovery Service"
+      }
+    },
+    "vaultStorageType": {
+      "type": "string",
+      "allowedValues": [
+        "LocallyRedundant",
+        "GloballyRedundant"
+      ],
+      "metadata": {
+        "description": "Change Vault storage type (not allowed if the vault has registered backups)"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location in which the resources will be deployed"
+      }
+    }
+  },
+  "variables": {
+    "namingPrefix": "",
+    "namingSuffix": "",
+    "recoveryServiceName": "[concat(variables('namingPrefix'), parameters('recoveryServicePublicDnsName'), variables('namingSuffix'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-06-01",
+      "name": "[variables('recoveryServiceName')]",
+      "type": "Microsoft.RecoveryServices/vaults",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "Recovery Service"
+      },
+      "sku": {
+        "name": "RS0",
+        "tier": "Standard"
+      },
+      "properties": {}
+    },
+    {
+      "condition": "[equals(parameters('vaultStorageType'), 'LocallyRedundant')]",
+      "apiVersion": "2016-12-01",
+      "type": "Microsoft.RecoveryServices/vaults/backupstorageconfig",
+      "name": "[concat(variables('recoveryServiceName'), '/vaultstorageconfig')]",
+      "dependsOn": [
+        "[variables('recoveryServiceName')]"
+      ],
+      "properties": {
+        "storageModelType": "[parameters('vaultStorageType')]",
+        "storageType": "[parameters('vaultStorageType')]",
+        "storageTypeState": "Unlocked"
+      }
+    }
+  ],
+  "outputs": {
+    "azureSubscription": {
+      "type": "object",
+      "value": "[subscription()]"
+    },
+    "recoveryService": {
+      "type": "object",
+      "value": "[reference(variables('recoveryServiceName'))]"
+    }
+  }
+}

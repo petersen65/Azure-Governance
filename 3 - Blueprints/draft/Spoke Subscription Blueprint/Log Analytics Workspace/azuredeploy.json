@@ -1,0 +1,125 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logsPublicDnsName": {
+      "type": "string",
+      "metadata": {
+        "description": "Monitor Logs workspace public DNS name"
+      }
+    },
+    "automationPublicDnsName": {
+      "type": "string",
+      "metadata": {
+        "description": "Automation account public DNS name"
+      }
+    },
+    "automationSku": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Free",
+        "Basic"
+      ],
+      "metadata": {
+        "description": "Automation account SKU: Free or Basic"
+      }
+    },
+    "logsServiceTier": {
+      "type": "string",
+      "defaultValue": "PerGB2018",
+      "allowedValues": [
+        "Free",
+        "Standalone",
+        "PerNode",
+        "PerGB2018"
+      ],
+      "metadata": {
+        "description": "Service tier: Free, Standalone, PerNode or PerGB2018"
+      }
+    },
+    "dataRetention": {
+      "type": "int",
+      "minValue": 30,
+      "maxValue": 730,
+      "metadata": {
+        "description": "Number of days data will be retained for"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location in which the resources will be deployed"
+      }
+    }
+  },
+  "variables": {
+    "namingPrefix": "",
+    "namingSuffix": "",
+    "logsWorkspaceName": "[concat(variables('namingPrefix'), parameters('logsPublicDnsName'), variables('namingSuffix'))]",
+    "automationAccountName": "[concat(variables('namingPrefix'), parameters('automationPublicDnsName'), variables('namingSuffix'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-10-31",
+      "name": "[variables('automationAccountName')]",
+      "type": "Microsoft.Automation/automationAccounts",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "Automation Account"
+      },
+      "properties": {
+        "sku": {
+          "name": "[parameters('automationSku')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-11-01-preview",
+      "name": "[variables('logsWorkspaceName')]",
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "Monitor Logs Workspace"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Automation/automationAccounts/', variables('automationAccountName'))]"
+      ],
+      "properties": {
+        "sku": {
+          "name": "[parameters('logsServiceTier')]"
+        },
+        "retention": "[parameters('dataRetention')]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-11-01-preview",
+          "name": "automation",
+          "type": "linkedServices",
+          "dependsOn": [
+            "[concat('Microsoft.Automation/automationAccounts/', variables('automationAccountName'))]",
+            "[concat('Microsoft.OperationalInsights/workspaces/', variables('logsWorkspaceName'))]"
+          ],
+          "properties": {
+            "resourceId": "[resourceId('Microsoft.Automation/automationAccounts/', variables('automationAccountName'))]"
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "azureSubscription": {
+      "type": "object",
+      "value": "[subscription()]"
+    },
+    "automationAccount": {
+      "type": "object",
+      "value": "[reference(variables('automationAccountName'))]"
+    },
+    "monitorLogsWorkspace": {
+      "type": "object",
+      "value": "[reference(variables('logsWorkspaceName'))]"
+    }
+  }
+}
