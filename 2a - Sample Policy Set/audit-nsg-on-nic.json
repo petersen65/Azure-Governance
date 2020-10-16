@@ -1,36 +1,20 @@
 {
- "properties": {
-  "displayName": "Audit NSG on NIC",
-  "policyType": "Custom",
-  "mode": "All",
-  "description": "Audit network interface cards without network security group",
-  "metadata": {
-   "category": "General",
-   "createdBy": "f00c5d96-8aca-49b0-991c-891500ead0af",
-   "createdOn": "2020-02-06T19:22:44.5308064Z",
-   "updatedBy": null,
-   "updatedOn": null
-  },
-  "parameters": {},
-  "policyRule": {
-   "if": {
-    "allOf": [
-     {
-      "field": "type",
-      "equals": "Microsoft.Network/networkInterfaces"
-     },
-     {
-      "field": "Microsoft.Network/networkInterfaces/networkSecurityGroup.id",
-      "exists": "false"
-     }
-    ]
-   },
-   "then": {
-    "effect": "audit"
-   }
-  }
- },
- "id": "/providers/Microsoft.Management/managementGroups/19bb061f-570f-4487-bdc6-86990c8773d7/providers/Microsoft.Authorization/policyDefinitions/f63293a4-3a70-4c66-9e64-586befd3454c",
- "type": "Microsoft.Authorization/policyDefinitions",
- "name": "f63293a4-3a70-4c66-9e64-586befd3454c"
+    "parameters": {},
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Network/networkInterfaces"
+                },
+                {
+                    "field": "Microsoft.Network/networkInterfaces/networkSecurityGroup.id",
+                    "exists": "false"
+                }
+            ]
+        },
+        "then": {
+            "effect": "audit"
+        }
+    }
 }

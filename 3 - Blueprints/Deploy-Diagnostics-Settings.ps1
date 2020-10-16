@@ -9,7 +9,7 @@ $aadTenantId = (Get-AzContext).Tenant.Id
 $subscriptionId = (Get-AzContext).Subscription.Id
 $location = 'westeurope'
 
-# Deploy diagnostics settings blueprint to management group
+# Deploy diagnostics settings blueprint to a management group and assign it to a subscription
 Import-AzBlueprintWithArtifact -Name 'diagnostics-settings' `
     -ManagementGroupId $aadTenantId `
     -InputPath '.\3 - Blueprints\diagnostics-settings\' -Force

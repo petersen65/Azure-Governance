@@ -12,14 +12,14 @@ Install-Module -Name 'Az.ManagedServiceIdentity' -Scope AllUsers
 
 # Create first level of Management Groups
 New-AzManagementGroup -GroupId 'custodian-services' -DisplayName 'Custodian Services' -ParentId $parentId
-$division1 = New-AzManagementGroup -GroupId "division-1-projects" -DisplayName "Division 1 Projects" -ParentId $parentId
-$division2 = New-AzManagementGroup -GroupId "division-2-projects" -DisplayName "Division 2 Projects" -ParentId $parentId
+$division1 = New-AzManagementGroup -GroupId 'division-1-projects' -DisplayName 'Division 1 Projects' -ParentId $parentId
+$division2 = New-AzManagementGroup -GroupId 'division-2-projects' -DisplayName 'Division 2 Projects' -ParentId $parentId
 
 # Create project level Management Groups (group names must be unique)
-New-AzManagementGroup -GroupId "prod-project-x" -DisplayName "PROD Project X" -ParentId $division1.Id
-New-AzManagementGroup -GroupId "uat-project-x" -DisplayName "UAT Project X" -ParentId $division1.Id
-New-AzManagementGroup -GroupId "prod-project-y" -DisplayName "PROD Project Y" -ParentId $division2.Id
-New-AzManagementGroup -GroupId "uat-project-y" -DisplayName "UAT Project Y" -ParentId $division2.Id
+New-AzManagementGroup -GroupId 'prod-project-x' -DisplayName 'PROD Project X' -ParentId $division1.Id
+New-AzManagementGroup -GroupId 'uat-project-x' -DisplayName 'UAT Project X' -ParentId $division1.Id
+New-AzManagementGroup -GroupId 'prod-project-y' -DisplayName 'PROD Project Y' -ParentId $division2.Id
+New-AzManagementGroup -GroupId 'uat-project-y' -DisplayName 'UAT Project Y' -ParentId $division2.Id
 
 # Remove automatically created Owner role assignments on Management Groups
 $ownerId = (Get-AzADUser -UserPrincipalName (Get-AzContext).Account.Id).Id
@@ -27,10 +27,10 @@ Remove-AzRoleAssignment -ObjectId $ownerId -Scope '/providers/Microsoft.Manageme
 Remove-AzRoleAssignment -ObjectId $ownerId -Scope '/providers/Microsoft.Management/managementgroups/division-1-projects' -RoleDefinitionName 'Owner'
 Remove-AzRoleAssignment -ObjectId $ownerId -Scope '/providers/Microsoft.Management/managementgroups/division-2-projects' -RoleDefinitionName 'Owner'
 
-Remove-AzRoleAssignment -ObjectId $ownerId -Scope "/providers/Microsoft.Management/managementgroups/prod-project-x" -RoleDefinitionName 'Owner'
-Remove-AzRoleAssignment -ObjectId $ownerId -Scope "/providers/Microsoft.Management/managementgroups/uat-project-x" -RoleDefinitionName 'Owner'
-Remove-AzRoleAssignment -ObjectId $ownerId -Scope "/providers/Microsoft.Management/managementgroups/prod-project-y" -RoleDefinitionName 'Owner'
-Remove-AzRoleAssignment -ObjectId $ownerId -Scope "/providers/Microsoft.Management/managementgroups/uat-project-y" -RoleDefinitionName 'Owner'
+Remove-AzRoleAssignment -ObjectId $ownerId -Scope '/providers/Microsoft.Management/managementgroups/prod-project-x' -RoleDefinitionName 'Owner'
+Remove-AzRoleAssignment -ObjectId $ownerId -Scope '/providers/Microsoft.Management/managementgroups/uat-project-x' -RoleDefinitionName 'Owner'
+Remove-AzRoleAssignment -ObjectId $ownerId -Scope '/providers/Microsoft.Management/managementgroups/prod-project-y' -RoleDefinitionName 'Owner'
+Remove-AzRoleAssignment -ObjectId $ownerId -Scope '/providers/Microsoft.Management/managementgroups/uat-project-y' -RoleDefinitionName 'Owner'
 
 # Create custodian team identities
 New-AzADGroup -DisplayName 'Custodian Team' -MailNickName 'CT'
@@ -61,13 +61,13 @@ New-AzADGroup -DisplayName 'UAT Project Y Team' -MailNickName 'UPYT'
 $custodianTeamId = (Get-AzADGroup -SearchString 'Custodian Team').Id
 New-AzRoleAssignment -ObjectId $custodianTeamId -Scope $parentId -RoleDefinitionName 'Owner'
 
-# Assign team identities of division 1 projects as Contributor to their Management Group
+# Assign team identities of division 1 projects as Owner to their Management Group
 $division1TeamId = (Get-AzADGroup -SearchString 'Division 1 Team').Id
-New-AzRoleAssignment -ObjectId $division1TeamId -Scope '/providers/Microsoft.Management/managementgroups/division-1-projects' -RoleDefinitionName 'Contributor'
+New-AzRoleAssignment -ObjectId $division1TeamId -Scope '/providers/Microsoft.Management/managementgroups/division-1-projects' -RoleDefinitionName 'Owner'
 
-# Assign team identities of division 2 projects as Contributor to their Management Group
+# Assign team identities of division 2 projects as Owner to their Management Group
 $division2TeamId = (Get-AzADGroup -SearchString 'Division 2 Team').Id
-New-AzRoleAssignment -ObjectId $division2TeamId -Scope '/providers/Microsoft.Management/managementgroups/division-2-projects' -RoleDefinitionName 'Contributor'
+New-AzRoleAssignment -ObjectId $division2TeamId -Scope '/providers/Microsoft.Management/managementgroups/division-2-projects' -RoleDefinitionName 'Owner'
 
 # Assign project X team identities as Contributor to their Management Group
 $prodProjectXTeamId = (Get-AzADGroup -SearchString 'PROD Project X Team').Id
