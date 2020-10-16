@@ -1,0 +1,92 @@
+{
+    "properties": {
+      "displayName": "Deny VM / Managed Disk Creation without Customer Managed Key ",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "Deny when managed disks are not encrypted with CMK via DiskEncryptionSet.",
+      "metadata": {
+        "createdBy": "9dd9ca1e-5c3e-4f1b-a8d1-c6c4e29d75b6",
+        "createdOn": "2020-10-06T14:48:39.2674824Z",
+        "updatedBy": "9dd9ca1e-5c3e-4f1b-a8d1-c6c4e29d75b6",
+        "updatedOn": "2020-10-09T06:05:43.67203Z",
+        "category": "General"
+      },
+      "parameters": {},
+      "policyRule": {
+        "if": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Compute/virtualMachines"
+                },
+                {
+                  "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.managedDisk.diskEncryptionSet.id",
+                  "exists": "False"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Compute/virtualMachines"
+                },
+                {
+                  "field": "Microsoft.Compute/virtualMachines/storageProfile.dataDisks[*].managedDisk.diskEncryptionSet.id",
+                  "exists": "False"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Compute/virtualMachineScaleSets"
+                },
+                {
+                  "field": "Microsoft.Compute/virtualMachineScaleSets/virtualMachineProfile.storageProfile.osDisk.managedDisk.diskEncryptionSet.id",
+                  "exists": "False"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Compute/virtualMachineScaleSets"
+                },
+                {
+                  "field": "Microsoft.Compute/virtualMachineScaleSets/virtualMachineProfile.storageProfile.dataDisks[*].managedDisk.diskEncryptionSet.id",
+                  "exists": "False"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Compute/disks"
+                },
+                {
+                  "field": "Microsoft.Compute/disks/managedBy",
+                  "exists": "False"
+                },
+                {
+                  "field": "Microsoft.Compute/disks/encryption.diskEncryptionSetId",
+                  "exists": "False"
+                }
+              ]
+            }
+          ]
+        },
+        "then": {
+          "effect": "deny"
+        }
+      }
+    },
+    "id": "/subscriptions/ee1de5c2-da76-4fb5-9239-7e74716cc95f/providers/Microsoft.Authorization/policyDefinitions/e9e36808-6460-4dbc-a7be-961d94c6ec75",
+    "type": "Microsoft.Authorization/policyDefinitions",
+    "name": "e9e36808-6460-4dbc-a7be-961d94c6ec75"
+  }
